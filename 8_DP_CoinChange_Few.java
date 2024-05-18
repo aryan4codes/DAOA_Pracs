@@ -2,18 +2,27 @@ import java.util.Arrays;
 
 class CoinChange {
     public static int coinChange(int[] coins, int amount) {
+        // Create an array to store the minimum number of coins needed for each amount
         int[] dp = new int[amount + 1];
-        Arrays.fill(dp, amount + 1); 
-
+        Arrays.fill(dp, Integer.MAX_VALUE); // Fill the array with a large value initially
+        
+        // Base case: 0 coins needed to make 0 amount
+        dp[0] = 0;
+        
+        // Iterate over each amount from 1 to amount
         for (int i = 1; i <= amount; i++) {
+            // Iterate over each coin denomination
             for (int coin : coins) {
-                if (i - coin >= 0) {
+                // Check if the current coin denomination can be used to make the current amount
+                if (coin <= i && dp[i - coin] != Integer.MAX_VALUE) {
+                    // Update dp[i] with the minimum of its current value and dp[i - coin] + 1
                     dp[i] = Math.min(dp[i], dp[i - coin] + 1);
                 }
             }
         }
-
-        return dp[amount] > amount ? -1 : dp[amount];
+        
+        // If dp[amount] is still Integer.MAX_VALUE, it means it's not possible to make the amount
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
     }
 
     public static void main(String[] args) {
